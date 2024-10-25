@@ -11,6 +11,9 @@ function displayExtractedData(text) {
 
         const functionCode = columns.slice(0, weightIndex).join(' '); // Join all columns except the last as function code
 
+        // Log for debugging
+        console.log(`Row: ${row}, Function Code: ${functionCode}, Weight: ${weight}`);
+
         // Check if weight is valid
         if (!isNaN(weight)) {
             // Check if it's a top-level category or a subcategory
@@ -31,13 +34,19 @@ function displayExtractedData(text) {
         }
     });
 
+    // Log categories for debugging
+    console.log('Categories:', JSON.stringify(categories, null, 2));
+
     // Create HTML for displaying the data
     let html = '';
     Object.keys(categories).forEach(category => {
         const cat = categories[category];
+        
         // Check if cat.weight is defined before using toFixed
         if (cat.weight !== undefined) {
             html += `<h3>${category}: ${cat.description} | Total Weight: ${cat.weight.toFixed(2)} lbs</h3>`;
+        } else {
+            console.warn(`Warning: cat.weight is undefined for ${category}`);
         }
         
         // If subcategories exist, display them
@@ -47,12 +56,16 @@ function displayExtractedData(text) {
                 // Ensure sub.weight is defined before using toFixed
                 if (sub.weight !== undefined) {
                     html += `<li>${sub.functionCode} | ${sub.weight.toFixed(2)} lbs</li>`;
+                } else {
+                    console.warn(`Warning: sub.weight is undefined for ${sub.functionCode}`);
                 }
             });
             html += `</ul>`;
             // Check if totalWeight is defined before using toFixed
             if (cat.totalWeight !== undefined) {
                 html += `<strong>Total Weight of Section 1.1: ${cat.totalWeight.toFixed(2)} lbs</strong><br><br>`;
+            } else {
+                console.warn(`Warning: totalWeight is undefined for ${category}`);
             }
         }
     });
