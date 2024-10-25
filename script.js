@@ -35,43 +35,51 @@ document.getElementById('processButton').addEventListener('click', () => {
 
 function displayExtractedData(text) {
     const rows = text.split('\n').map(row => row.trim()).filter(row => row !== '');
-    const data = {};
+    const categories = {};
 
     // Parse the extracted text into a structured format
-    rows.forEach(row => {
-        const columns = row.split(/\s+/); // Split by whitespace (adjust as needed)
-        
-        // Check if the last column is a weight and handle parsing
+    rows.forEach((row, index) => {
+        const columns = row.split(/\s+/); // Split by whitespace
         const weightIndex = columns.length - 1;
-        const weight = parseFloat(columns[weightIndex]); // Assuming last column is weight
+        const weight = parseFloat(columns[weightIndex]); // Last column is weight
         const functionCode = columns.slice(1, weightIndex).join(' '); // Join all columns except the last as function code
         const sectionCode = columns[0]; // First column is section code
 
-        // Proceed only if weight is a valid number
+        // Check if weight is valid
         if (!isNaN(weight)) {
-            // Initialize section code if not already done
-            if (!data[sectionCode]) {
-                data[sectionCode] = [];
+            // Check if it's a top-level category or a subcategory
+            if (index < 5) { // Assume first 5 entries are top-level categories based on your example
+                categories[`Category ${index + 1}`] = {
+                    description: functionCode,
+                    weight: weight,
+                    subcategories: []
+                };
+            } else {
+                // For subcategories, assume all remaining are under "Category 1.1"
+                if (!categories["Category 1.1"]) {
+                    categories["Category 1.1"] = { subcategories: [], totalWeight: 0 };
+                }
+                categories["Category 1.1"].subcategories.push({ functionCode, weight });
+                categories["Category 1.1"].totalWeight += weight; // Sum weight for subcategories
             }
-
-            // Add function code and its weight to the section
-            data[sectionCode].push({ functionCode, weight });
         }
     });
 
     // Create HTML for displaying the data
     let html = '';
-    Object.keys(data).forEach(section => {
-        html += `<h3>${section}</h3><ul>`;
-        let sectionWeight = 0;
-
-        data[section].forEach(func => {
-            html += `<li>${func.functionCode} | ${func.weight.toFixed(2)} lbs</li>`;
-            sectionWeight += func.weight; // Sum weights for the section
-        });
-
-        // Display the total weight after listing all items in the section
-        html += `</ul><strong>Total Weight of Section: ${sectionWeight.toFixed(2)} lbs</strong><br><br>`;
+    Object.keys(categories).forEach(category => {
+        const cat = categories[category];
+        html += `<h3>${category}: ${cat.description} | Total Weight: ${cat.weight.toFixed(2)} lbs</h3>`;
+        
+        // If subcategories exist, display them
+        if (cat.subcategories.length > 0) {
+            html += `<h4>Subcategories:</h4><ul>`;
+            cat.subcategories.forEach(sub => {
+                html += `<li>${sub.functionCode} | ${sub.weight.toFixed(2)} lbs</li>`;
+            });
+            html += `</ul>`;
+            html += `<strong>Total Weight of Section 1.1: ${cat.totalWeight.toFixed(2)} lbs</strong><br><br>`;
+        }
     });
 
     document.getElementById('output').innerHTML = html;
