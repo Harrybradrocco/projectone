@@ -69,6 +69,25 @@ function displayExtractedData(text) {
             }
         }
     });
+reader.onload = (event) => {
+    const img = new Image();
+    img.src = event.target.result;
+    img.onload = () => {
+        Tesseract.recognize(
+            img,
+            'eng',
+            {
+                logger: info => console.log(info) // Log progress
+            }
+        ).then(({ data: { text } }) => {
+            console.log('Recognized Text:', text); // Log the recognized text
+            displayExtractedData(text); // Call the function to process the text
+        }).catch(err => {
+            outputDiv.innerText = 'Error processing image: ' + err.message;
+        });
+    };
+};
+
 
     document.getElementById('output').innerHTML = html;
 }
