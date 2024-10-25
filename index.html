@@ -4,31 +4,59 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Image Upload and OCR</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/2.1.1/tesseract.min.js"></script>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Roboto', sans-serif;
             margin: 20px;
+            background-color: #f0f0f0; /* Light mode background */
+            color: #333; /* Light mode text color */
+            transition: background-color 0.3s, color 0.3s;
         }
         #output {
             margin-top: 20px;
             border: 1px solid #ccc;
             padding: 10px;
             min-height: 100px;
+            background-color: white; /* Light mode output background */
         }
         ul {
             list-style-type: none; /* Remove bullet points */
             padding-left: 20px; /* Indent nested lists */
         }
+        #modeToggle {
+            margin-bottom: 20px;
+            padding: 10px;
+            cursor: pointer;
+        }
+        /* Dark mode styles */
+        body.dark-mode {
+            background-color: #333; /* Dark mode background */
+            color: #f0f0f0; /* Dark mode text color */
+        }
+        body.dark-mode #output {
+            background-color: #444; /* Dark mode output background */
+            border-color: #666; /* Dark mode border color */
+        }
     </style>
 </head>
 <body>
     <h1>Upload Screenshot</h1>
+    <button id="modeToggle">Toggle Dark/Light Mode</button>
     <input type="file" id="fileInput" accept="image/*">
     <button id="processButton">Process Image</button>
     <h2>Extracted Data</h2>
     <div id="output"></div>
 
     <script src="script.js"></script>
+    <script>
+        // Dark/Light Mode Toggle
+        const modeToggle = document.getElementById('modeToggle');
+        modeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            modeToggle.innerText = document.body.classList.contains('dark-mode') ? 'Switch to Light Mode' : 'Switch to Dark Mode';
+        });
+    </script>
 </body>
 </html>
