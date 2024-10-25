@@ -41,11 +41,14 @@ function displayExtractedData(text) {
     rows.forEach(row => {
         const columns = row.split(/\s+/); // Split by whitespace (adjust as needed)
         
-        if (columns.length >= 3) { // Assuming first two are code and function, and third is weight
-            const sectionCode = columns[0]; // e.g., "Casing"
-            const functionCode = columns[1]; // e.g., "Function1"
-            const weight = parseFloat(columns[2]); // e.g., "2.5"
+        // Check if the last column is a weight and handle parsing
+        const weightIndex = columns.length - 1;
+        const weight = parseFloat(columns[weightIndex]); // Assuming last column is weight
+        const functionCode = columns.slice(1, weightIndex).join(' '); // Join all columns except the last as function code
+        const sectionCode = columns[0]; // First column is section code
 
+        // Proceed only if weight is a valid number
+        if (!isNaN(weight)) {
             // Initialize section code if not already done
             if (!data[sectionCode]) {
                 data[sectionCode] = [];
@@ -63,11 +66,11 @@ function displayExtractedData(text) {
         let sectionWeight = 0;
 
         data[section].forEach(func => {
-            html += `<li>${func.functionCode} | ${func.weight}</li>`;
+            html += `<li>${func.functionCode} | ${func.weight.toFixed(2)} lbs</li>`;
             sectionWeight += func.weight; // Sum weights for the section
         });
 
-        html += `</ul><strong>Total Weight of Section: ${sectionWeight}</strong>`;
+        html += `</ul><strong>Total Weight of Section: ${sectionWeight.toFixed(2)} lbs</strong>`;
     });
 
     document.getElementById('output').innerHTML = html;
