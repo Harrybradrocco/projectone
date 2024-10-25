@@ -70,7 +70,8 @@ function displayExtractedData(text) {
             sectionWeight += func.weight; // Sum weights for the section
         });
 
-        html += `</ul><strong>Total Weight of Section: ${sectionWeight.toFixed(2)} lbs</strong>`;
+        // Display the total weight after listing all items in the section
+        html += `</ul><strong>Total Weight of Section: ${sectionWeight.toFixed(2)} lbs</strong><br><br>`;
     });
 
     document.getElementById('output').innerHTML = html;
