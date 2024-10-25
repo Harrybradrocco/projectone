@@ -40,9 +40,11 @@ function displayExtractedData(text) {
     // Parse the extracted text into a structured format
     rows.forEach((row, index) => {
         const columns = row.split(/\s+/); // Split by whitespace
-        const weightIndex = columns.length - 1;
-        const weight = parseFloat(columns[weightIndex]); // Last column is weight
-        const functionCode = columns.slice(1, weightIndex).join(' '); // Join all columns except the last as function code
+        const weightIndex = columns.length - 1; // Last column is weight
+        const weightStr = columns[weightIndex];
+        const weight = parseFloat(weightStr.replace(/[^0-9.-]+/g, '')); // Parse weight, remove non-numeric characters
+
+        const functionCode = columns.slice(0, weightIndex).join(' '); // Join all columns except the last as function code
         const sectionCode = columns[0]; // First column is section code
 
         // Check if weight is valid
