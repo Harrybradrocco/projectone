@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Image Upload and OCR</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/2.1.1/tesseract.min.js"></script>
     <style>
         body {
@@ -26,9 +27,13 @@
             padding-left: 20px; /* Indent nested lists */
         }
         #modeToggle {
-            margin-bottom: 20px;
-            padding: 10px;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            border: none;
+            background: none;
             cursor: pointer;
+            font-size: 24px;
         }
         /* Dark mode styles */
         body.dark-mode {
@@ -42,8 +47,11 @@
     </style>
 </head>
 <body>
+    <button id="modeToggle" title="Toggle Dark/Light Mode">
+        <i class="fas fa-sun" id="sunIcon"></i>
+        <i class="fas fa-moon" id="moonIcon" style="display: none;"></i>
+    </button>
     <h1>Upload Screenshot</h1>
-    <button id="modeToggle">Toggle Dark/Light Mode</button>
     <input type="file" id="fileInput" accept="image/*">
     <button id="processButton">Process Image</button>
     <h2>Extracted Data</h2>
@@ -53,9 +61,13 @@
     <script>
         // Dark/Light Mode Toggle
         const modeToggle = document.getElementById('modeToggle');
+        const sunIcon = document.getElementById('sunIcon');
+        const moonIcon = document.getElementById('moonIcon');
+
         modeToggle.addEventListener('click', () => {
             document.body.classList.toggle('dark-mode');
-            modeToggle.innerText = document.body.classList.contains('dark-mode') ? 'Switch to Light Mode' : 'Switch to Dark Mode';
+            sunIcon.style.display = document.body.classList.contains('dark-mode') ? 'none' : 'block';
+            moonIcon.style.display = document.body.classList.contains('dark-mode') ? 'block' : 'none';
         });
     </script>
 </body>
